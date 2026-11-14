@@ -1132,7 +1132,7 @@ public class V1 extends JFrame implements ActionListener {
 	        return;
 	    }
 
-	    if (!dni.matches("[1-9][0-9]{7}")) {
+	    if (!dni.matches("[0-9][0-9]{7}")) {
 	        JOptionPane.showMessageDialog(this,
 	                "El DNI debe tener 8 números.");
 	        return;
