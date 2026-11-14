@@ -16,7 +16,7 @@ import modelo.Paciente;
 import servicio.ProcesadorPacientes;
 import servicio.SistemaSalud;
 
-
+/* Pruebas JUnit 5 de las reglas del servicio. Cada prueba usa códigos y DNI propios para no interferir por el Singleton. */
 class SistemaSaludTest {
 
     // registrar y buscar un paciente por código

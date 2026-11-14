@@ -1,5 +1,5 @@
 package modelo;
-
+/** Médico precargado con código, nombre y especialidad (RD07). */
 public class Medico  {
 
 	  private String codigo;

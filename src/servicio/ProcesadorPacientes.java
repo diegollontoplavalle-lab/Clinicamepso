@@ -1,12 +1,12 @@
-package servicio;
+	package servicio;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import modelo.Paciente;
 
-
+/* Procesa la lista de pacientes con funciones de orden superior: filter, map y reduce (RD04, DD02). */
 public class ProcesadorPacientes {
-	   // FILTER
+	/* FILTER: devuelve los pacientes con 18 años o más. */
     public static List<Paciente> filtrarMayoresDeEdad(
             List<Paciente> pacientes) {
 
@@ -15,7 +15,7 @@ public class ProcesadorPacientes {
                 .collect(Collectors.toList());
     }
 
-    // MAP
+    /* MAP: extrae los nombres de los pacientes. */
     public static List<String> obtenerNombres(
             List<Paciente> pacientes) {
 
@@ -24,7 +24,7 @@ public class ProcesadorPacientes {
                 .collect(Collectors.toList());
     }
 
-    // REDUCE 
+    /* REDUCE: suma las edades de todos los pacientes. */
     public static int sumarEdades(
             List<Paciente> pacientes) {
 
@@ -33,7 +33,7 @@ public class ProcesadorPacientes {
                 .reduce(0, Integer::sum);
     }
 
-    // REPORTE
+    /*Combina filter, map y reduce para armar el reporte: total, mayores de edad, suma y promedio de edades. */
     public static String generarReporte(
             List<Paciente> pacientes) {
 

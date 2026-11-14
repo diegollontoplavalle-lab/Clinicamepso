@@ -1,5 +1,10 @@
 package modelo;
-
+/**
+ * Entidad que representa a un paciente de la Clínica Mepso.
+ * Aplica encapsulamiento: atributos privados, getters para todos y setters
+ * solo para los datos modificables (el código no tiene setter, RF03).
+ * Los datos usados son ficticios (RD06, Ley N.° 29733).
+ */
 public class Paciente {
 	  private String codigo;
 	    private String Dni;
@@ -37,7 +42,7 @@ public class Paciente {
 	    public void setNombre(String nombre) {
 	        this.nombre = nombre;
 	    }
-
+	    /** Actualiza el DNI. La validación del formato se hace antes, en la ventana V1. */
 	    public void setDni(String dni) {
 	        this.Dni = dni;
 	    }

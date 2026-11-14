@@ -1,5 +1,8 @@
 package modelo;
-
+/*
+  Cita médica que vincula un paciente con un médico en una fecha y hora.
+ La fecha se guarda como texto con formato dd/MM/uuuu.
+ */
 public class Cita {
 	private String codigo;
     private Paciente paciente;

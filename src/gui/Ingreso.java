@@ -5,6 +5,7 @@ import java.awt.GridLayout;
 import java.util.Arrays;
 import javax.swing.*;
 
+/* Ventana de acceso con usuario y contraseña, y bloqueo temporal tras intentos fallidos (RF09). */
 public class Ingreso extends JFrame {
 
     private static final long serialVersionUID = 1L;
@@ -44,7 +45,7 @@ public class Ingreso extends JFrame {
         barra.setVisible(false);
         panel.add(barra, BorderLayout.SOUTH);
     }
-
+    /* Pide las credenciales y las valida. La contraseña se lee como char[] y se borra de la memoria después de compararla (RD08). */
     private void solicitarAcceso() {
         JTextField usuario = new JTextField();
         JPasswordField clave = new JPasswordField();
@@ -70,7 +71,7 @@ public class Ingreso extends JFrame {
         boolean correcto =
                 usuario.getText().trim().equals("admin")
                 && Arrays.equals(ingresada, esperada);
-
+     // Borra la contraseña de la memoria para no dejarla en texto plano.
         Arrays.fill(ingresada, '\0');
         Arrays.fill(esperada, '\0');
         clave.setText("");
@@ -99,7 +100,7 @@ public class Ingreso extends JFrame {
 
         iniciarCarga();
         }
-
+    /* Desactiva el botón tras 3 intentos fallidos; la espera empieza en 20 segundos y se duplica en cada nuevo bloqueo. */
 private void bloquearIngreso() {
     btnIngresar.setEnabled(false);
 

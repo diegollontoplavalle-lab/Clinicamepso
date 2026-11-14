@@ -1,5 +1,5 @@
 package modelo;
-
+/* Registro del diagnóstico de una atención médica de un paciente. */
 public class Atención {
 	 private String diagnostico;
 	    private String fecha;
