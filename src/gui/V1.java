@@ -30,6 +30,7 @@ import javax.swing.JScrollBar;
 import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
 
+/* Ventana principal. Gestiona pacientes, citas y médicos con menús y botones (programación orientada a eventos). Las reglas de negocio están en SistemaSalud. */
 
 public class V1 extends JFrame implements ActionListener {
 
@@ -284,6 +285,7 @@ public class V1 extends JFrame implements ActionListener {
 			do_btnNewButton_actionPerformed(e);
 		}
 	}
+	/* Registra un paciente: valida campos vacíos, teléfono, nombre, DNI y edad (0 a 120), y rechaza código o DNI repetidos (RF01, RF10). */
 	protected void do_btnNewButton_actionPerformed(ActionEvent e) {
 		String codigo = txtCod.getText().trim();
 		    String dni = txtDni.getText().trim();
@@ -297,6 +299,7 @@ public class V1 extends JFrame implements ActionListener {
 		        JOptionPane.showMessageDialog(this, "Complete todos los campos.");
 		        return;
 		    }
+		 // Celular : 9 dígitos que empiezan con 9.
 		    if (!telefono.matches("9[0-9]{8}")) {
 		        JOptionPane.showMessageDialog(this,
 		                "Agrega un número de teléfono válido.");
@@ -307,7 +310,8 @@ public class V1 extends JFrame implements ActionListener {
 		                "El nombre solo debe contener letras y espacios.");
 		        return;
 		    }
-
+		 // El DNI debe tener exactamente 8 dígitos.
+		    
 		    if (!dni.matches("[0-9][0-9]{7}")) {
 		        JOptionPane.showMessageDialog(this,
 		                "El DNI debe tener 8 números.");
@@ -347,6 +351,14 @@ public class V1 extends JFrame implements ActionListener {
 		                "Ya existe un paciente con ese DNI.");
 		        return;
 		    }
+		 // El teléfono no puede repetirse entre pacientes.
+		    boolean telefonoRepetido = sistema.getPacientes().stream()
+		            .anyMatch(p -> p.getTelefono().equals(telefono));
+		    if (telefonoRepetido) {
+		        JOptionPane.showMessageDialog(this,
+		                "Ya existe un paciente con ese teléfono.");
+		        return;
+		    }
 		    Paciente paciente = new Paciente(
 		            codigo,
 		            dni,
@@ -367,7 +379,7 @@ public class V1 extends JFrame implements ActionListener {
 		    txtTel.setText("");
 		}
 		
-
+	/* Busca un paciente por código o DNI y muestra el DNI parcialmente oculto (RF02). */
 	protected void do_btnNewButton_1_actionPerformed(ActionEvent e) {
 		String codigo = txtCod.getText().trim();
 		String dni = txtDni.getText().trim();
@@ -498,6 +510,7 @@ public class V1 extends JFrame implements ActionListener {
 	    mostrarFormularioPaciente(false);
 	    mostrarMensaje(resultado.toString());
 	} 
+	/* Muestra los médicos de una especialidad para que el usuario elija uno (RF05). */
 	private Medico elegirMedico(String especialidad) {
 	    List<Medico> disponibles = SistemaSalud.getInstancia()
 	            .getMedicos().stream()
@@ -526,7 +539,7 @@ public class V1 extends JFrame implements ActionListener {
 	            .findFirst()
 	            .orElse(null);
 	}
-
+	/* Ofrece solo los horarios libres del médico en la fecha elegida (RF06, CE04). */
 	private String elegirHorario(Medico medico, String fecha) {
 	    SistemaSalud sistema = SistemaSalud.getInstancia();
 
@@ -544,7 +557,7 @@ public class V1 extends JFrame implements ActionListener {
 	            this, "Horarios disponibles:", "Elegir horario",
 	            JOptionPane.QUESTION_MESSAGE, null, libres, libres[0]);
 	}
-
+	/*Flujo completo para registrar una cita: paciente, especialidad, médico, fecha, hora y motivo (RF06). */
 	private void registrarCitaDesdeMenu() {
 	    SistemaSalud sistema = SistemaSalud.getInstancia();
 
@@ -807,6 +820,7 @@ public class V1 extends JFrame implements ActionListener {
 	    );
 	    
 	}
+	/*Abre JCalendar para elegir la fecha de la cita; no permite fechas pasadas (RD02). */
 	private String seleccionarFechaCalendario() {
 	    com.toedter.calendar.JCalendar calendario =
 	        new com.toedter.calendar.JCalendar();
@@ -883,7 +897,7 @@ public class V1 extends JFrame implements ActionListener {
 	        + "\nTratamiento y receta: pendientes de indicación médica."
 	        + "\nUso académico; no constituye una receta médica.";
 	}
-
+	/* Lista las citas de un paciente a partir de su DNI (RF07). */
 	private void consultarCitaDesdeMenu() {
 	    String dni = JOptionPane.showInputDialog(this, "Ingrese su DNI:");
 	    if (dni == null) return;
@@ -952,6 +966,7 @@ public class V1 extends JFrame implements ActionListener {
 
 	    mostrarMensaje(resultado.toString());
 	}
+	/* Agrega un médico nuevo al sistema (RF08). */
 	private void registrarMedico() {
 	    String codigo = JOptionPane.showInputDialog(this, "Código del médico:");
 	    if (codigo == null) return;
@@ -1000,6 +1015,7 @@ public class V1 extends JFrame implements ActionListener {
 	            + "\nNombre: " + medico.getNombre()
 	            + "\nEspecialidad: " + medico.getEspecialidad());
 	}
+	/* Precarga los 18 médicos de ejemplo, de M001 a M018 (RD07). */
 	private void cargarMedicosIniciales() {
 	    if (medicosInicializados) {
 	        return;
@@ -1045,7 +1061,7 @@ public class V1 extends JFrame implements ActionListener {
 	    }
 	}
 	
-
+	/* Recarga la tabla de pacientes mostrando el DNI con los primeros cuatro dígitos ocultos (Ley N.° 29733). */
 	private void actualizarTablaPacientes() {
 	    DefaultTableModel modelo =
 	        (DefaultTableModel) table.getModel();
@@ -1057,6 +1073,9 @@ public class V1 extends JFrame implements ActionListener {
 
 	        modelo.addRow(new Object[] {
 	            paciente.getCodigo(),
+	            
+	         // Minimización de datos: se oculta el inicio del DNI.
+	            
 	            "****" + paciente.getDni().substring(4), 
 	            paciente.getNombre(),
 	            paciente.getEdad(),
@@ -1064,6 +1083,7 @@ public class V1 extends JFrame implements ActionListener {
 	        });
 	    }
 	}
+	/* Modifica los datos de un paciente validándolos y evitando un DNI ya registrado en otro paciente (RF03). */
 	private void modificarPaciente() {
 	    int fila = table.getSelectedRow();
 
@@ -1131,8 +1151,14 @@ public class V1 extends JFrame implements ActionListener {
 	                "El nombre solo debe contener letras y espacios.");
 	        return;
 	    }
-
+	 // El DNI debe tener exactamente 8 dígitos 
 	    if (!dni.matches("[0-9][0-9]{7}")) {
+	    	
+	    	if (!telefono.matches("9[0-9]{8}")) {
+	    	    JOptionPane.showMessageDialog(this,
+	    	            "Agrega un número de teléfono válido.");
+	    	    return;
+	    	}
 	        JOptionPane.showMessageDialog(this,
 	                "El DNI debe tener 8 números.");
 	        return;
@@ -1164,6 +1190,14 @@ public class V1 extends JFrame implements ActionListener {
 	        if (otro != paciente && dni.equals(otro.getDni())) {
 	            JOptionPane.showMessageDialog(this,
 	                    "Ese DNI pertenece a otro paciente.");
+	            return;
+	        }
+	    }
+	 // El teléfono no puede pertenecer a otro paciente.
+	    for (Paciente otro : sistema.getPacientes()) {
+	        if (otro != paciente && telefono.equals(otro.getTelefono())) {
+	            JOptionPane.showMessageDialog(this,
+	                    "Ese teléfono pertenece a otro paciente.");
 	            return;
 	        }
 	    }
@@ -1206,6 +1240,7 @@ public class V1 extends JFrame implements ActionListener {
 	            JOptionPane.INFORMATION_MESSAGE
 	    );
 	}
+	/* Elimina al paciente y sus citas y atenciones, después de confirmar (RF04). */
 	private void eliminarPaciente() {
 	    int fila = table.getSelectedRow();
 
@@ -1250,6 +1285,7 @@ public class V1 extends JFrame implements ActionListener {
 	    JOptionPane.showMessageDialog(this,
 	            "Paciente eliminado.");
 	}
+	/*Elimina un médico solo si no tiene citas registradas (RF08). */
 	private void eliminarMedico() {
 	    SistemaSalud sistema = SistemaSalud.getInstancia();
 	    List<Medico> medicos = sistema.getMedicos();
